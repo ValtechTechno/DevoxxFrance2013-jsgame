@@ -106,5 +106,23 @@ describe ("When the game has not started", function () {
             expect(droneNode.position().left).toBeLessThan(previousLeft);
             expect(drone.direction).toBe("back");
         });
+
+        it ("if the drone has direction back, it has to keep it on the next run", function () {
+
+            setFixtures(sandbox());
+
+            var s = "#sandbox";
+            start($(s));
+
+            drone.direction = "back";
+            var droneNode = $(s).find(".drone");
+
+            var previousLeft = droneNode.position().left;
+
+            nextPosition();
+
+            expect(droneNode.position().left).toBeLessThan(previousLeft);
+            expect(drone.direction).toBe("back");
+        });
     });
 });
