@@ -54,4 +54,21 @@ describe ("When the game has not started", function () {
         expect(drone).toHaveCss({left:'120px'});
         expect(drone).toHaveAttr("src","img/heli1.png");
     });
+
+
+
+    describe ("the ship is moving from each side a max of 100px on right and left around it's original point", function () {
+
+        it ("the first position is saved", function () {
+
+            setFixtures(sandbox());
+
+            var s = "#sandbox";
+            start($(s));
+
+            expect(drone.first).toBeFalsy();
+            expect(drone.left0).toBeGreaterThan(0);
+            expect(drone.top0).toBeGreaterThan(0);
+        });
+    });
 });
