@@ -87,5 +87,24 @@ describe ("When the game has not started", function () {
             expect(newLeft).toBeGreaterThan(1);
             expect(newLeft).toBeLessThan(11);
         });
+
+        it ("if the drone come to the max on one side, the next move must be in the other way", function () {
+
+            setFixtures(sandbox());
+
+            var s = "#sandbox";
+            start($(s));
+
+            var left0 = drone.left0;
+            var droneNode = $(s).find(".drone");
+
+            droneNode.css("left",left0+99);
+            var previousLeft = droneNode.position().left;
+
+            nextPosition();
+
+            expect(droneNode.position().left).toBeLessThan(previousLeft);
+            expect(drone.direction).toBe("back");
+        });
     });
 });
