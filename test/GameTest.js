@@ -70,5 +70,22 @@ describe ("When the game has not started", function () {
             expect(drone.left0).toBeGreaterThan(0);
             expect(drone.top0).toBeGreaterThan(0);
         });
+
+        it ("the next position has moved from 10px from the first position", function () {
+
+            setFixtures(sandbox());
+
+            var s = "#sandbox";
+            start($(s));
+
+            var left0 = drone.left0;
+
+            nextPosition();
+
+            var droneNode = $(s).find(".drone");
+            var newLeft = Math.abs(droneNode.position().left-left0);
+            expect(newLeft).toBeGreaterThan(1);
+            expect(newLeft).toBeLessThan(11);
+        });
     });
 });
