@@ -124,5 +124,25 @@ describe ("When the game has not started", function () {
             expect(droneNode.position().left).toBeLessThan(previousLeft);
             expect(drone.direction).toBe("back");
         });
+
+        it ("if the drone has direction back, and gone to max, it has to come back", function () {
+
+            setFixtures(sandbox());
+
+            var s = "#sandbox";
+            start($(s));
+
+            var left0 = drone.left0;
+            drone.direction = "back";
+            var droneNode = $(s).find(".drone");
+
+            droneNode.css("left",left0-99);
+            var previousLeft = droneNode.position().left;
+
+            nextPosition();
+
+            expect(droneNode.position().left).toBeGreaterThan(previousLeft);
+            expect(drone.direction).toBe("");
+        });
     });
 });
