@@ -17,4 +17,22 @@ describe ("When the game has not started", function () {
         expect(earth).toHaveAttr("src","img/earth.png");
 
     });
+
+    it ("devoxx is hidden", function () {
+
+        setFixtures(sandbox());
+
+        var s = "#sandbox";
+
+        start($(s));
+        expect($(s)).toExist();
+        expect($(s)).toHaveCss({margin:"0px"});
+
+        var devoxx = $(s).find(".devoxx");
+        expect(devoxx).toExist();
+        expect(devoxx).toBe("img");
+        expect(devoxx).toBeVisible();
+        expect(devoxx).toHaveCss({position:'fixed', opacity:'0'});
+        expect(devoxx).toHaveAttr("src","img/bg.jpg");
+    });
 });
