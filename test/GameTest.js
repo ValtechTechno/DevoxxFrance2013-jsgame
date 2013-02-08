@@ -144,5 +144,41 @@ describe ("When the game has not started", function () {
             expect(droneNode.position().left).toBeGreaterThan(previousLeft);
             expect(drone.direction).toBe("");
         });
+
+        describe("When loading the page, the nextPosition should be called, all over the time", function() {
+            var timerCallBack, functionNextPosition;
+            beforeEach(function () {
+                timerCallBack = jasmine.createSpy("timerCallBack");
+                jasmine.Clock.useMock();
+
+                functionNextPosition = nextPosition;
+
+                nextPosition = function leakFunctionToOverrideTheRealOne() {
+                    console.log("spy");
+                    timerCallBack();
+                }
+            });
+
+            it ("interval is set", function () {
+
+                expect(timerCallBack).not.toHaveBeenCalled();
+
+                var previousTimer = timerPosition;
+                run();
+
+                jasmine.Clock.tick(81);
+
+                expect(timerPosition).not.toBe(previousTimer);
+
+                expect(timerCallBack).toHaveBeenCalled();
+                console.log(timerCallBack.callCount);
+
+                expect(timerCallBack.callCount).toBe(2);
+            });
+
+            afterEach(function restoreFunctionForOthers() {
+                nextPosition = functionNextPosition;
+            });
+        })
     });
 });
