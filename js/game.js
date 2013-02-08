@@ -1,3 +1,5 @@
+var timerPosition;
+
 drone = {
     first:true,
     left0:0,
@@ -33,20 +35,22 @@ drone = {
 
 function nextPosition() {
     drone.move();
+}
 
-    setTimeout(nextPosition,40);
+function run() {
+    timerPosition = setInterval(nextPosition,40);
 }
 
 function start(root) {
 
-    function moveDrone() {
+    function initDrone() {
         var droneNode = root.find(".drone");
 
         drone.left0 = droneNode.position().left;
         drone.top0 = droneNode.position().top;
         drone.first = false;
 
-        setTimeout(nextPosition,200);
+        run();
     }
 
     root.css({margin:0});
@@ -55,5 +59,5 @@ function start(root) {
     root.find(".devoxx").css({position:"fixed", height:"100%",opacity:0}).attr("src","img/bg.jpg");
     root.find(".drone").css({position:"fixed", top: 380, left: 120, zIndex:3}).attr("src","img/heli1.png");
 
-    moveDrone();
+    initDrone();
 }
