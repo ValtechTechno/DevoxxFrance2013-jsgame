@@ -154,7 +154,6 @@ describe ("When the game has not started", function () {
                 functionNextPosition = nextPosition;
 
                 nextPosition = function leakFunctionToOverrideTheRealOne() {
-                    console.log("spy");
                     timerCallBack();
                 }
             });
@@ -171,7 +170,6 @@ describe ("When the game has not started", function () {
                 expect(timerPosition).not.toBe(previousTimer);
 
                 expect(timerCallBack).toHaveBeenCalled();
-                console.log(timerCallBack.callCount);
 
                 expect(timerCallBack.callCount).toBe(2);
             });
@@ -184,7 +182,7 @@ describe ("When the game has not started", function () {
 });
 
 describe ("Start the game", function() {
-    it ("On keypress I, the drone doesn't move anymore right or left but the earth begin to get smaller and go down", function () {
+    it ("On keypress I, the drone has power increase", function () {
         setFixtures(sandbox());
         var $sandbox = $("#sandbox");
 
@@ -195,5 +193,27 @@ describe ("Start the game", function() {
         $sandbox.trigger(keydown);
 
         expect(drone.power).toBeGreaterThan(0);
+    });
+
+    it ("The drone doesn't move anymore right or left but the earth begin to get smaller and go down", function () {
+
+        setFixtures(sandbox());
+        var timerCallBack = jasmine.createSpy("timerCallBack");
+        jasmine.Clock.useMock();
+
+        functionNextPosition = nextPosition;
+
+        nextPosition = function leakFunctionToOverrideTheRealOne() {
+            timerCallBack();
+            functionNextPosition();
+        };
+
+        drone.power = 1;
+        start($("#sandbox"));
+        jasmine.Clock.tick(81);
+
+        expect($(".earth")).toHaveCss({bottom:"-2px"});
+
+        nextPosition = functionNextPosition;
     });
 });
