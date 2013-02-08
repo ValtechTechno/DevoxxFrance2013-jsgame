@@ -4,6 +4,7 @@ drone = {
     first:true,
     left0:0,
     right0:0,
+    power:0,
     direction:"",
     move:function() {
         var droneNode = $(".drone");
@@ -60,4 +61,15 @@ function start(root) {
     root.find(".drone").css({position:"fixed", top: 380, left: 120, zIndex:3}).attr("src","img/heli1.png");
 
     initDrone();
+
+    root.keydown(function (e) {
+        switch (String.fromCharCode(e.which)) {
+            case "I":
+                drone.power = 1;
+                break;
+            default:
+                console.log(String.fromCharCode(e.witch));
+                break;
+        }
+    });
 }
