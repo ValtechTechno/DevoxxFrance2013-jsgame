@@ -14,7 +14,7 @@ describe ("When the game has not started", function () {
             expect(earth).toExist();
             expect(earth).toBe("img");
             expect(earth).toBeVisible();
-            expect(earth).toHaveCss({position:'fixed'});
+            expect(earth).toHaveCss({position:'fixed', height: "1800px", bottom: "0px"});
             expect(earth).toHaveAttr("src","img/earth.png");
 
         });
@@ -33,7 +33,7 @@ describe ("When the game has not started", function () {
             expect(devoxx).toExist();
             expect(devoxx).toBe("img");
             expect(devoxx).toBeVisible();
-            expect(devoxx).toHaveCss({position:'fixed', opacity:'0'});
+            expect(devoxx).toHaveCss({position:'fixed', opacity:'0', width: "6000px"});
             expect(devoxx).toHaveAttr("src","img/bg.jpg");
         });
 
@@ -195,7 +195,7 @@ describe ("Start the game", function() {
         expect(drone.power).toBeGreaterThan(0);
     });
 
-    it ("The drone doesn't move anymore right or left but the earth begin to get smaller and go down", function () {
+    it ("The drone doesn't move anymore right or left but the earth begin to get smaller and go down, ", function () {
 
         setFixtures(sandbox());
         var timerCallBack = jasmine.createSpy("timerCallBack");
@@ -210,9 +210,47 @@ describe ("Start the game", function() {
 
         drone.power = 1;
         start($("#sandbox"));
+        var $drone = $(".drone");
+        var previousPos = $drone.css("left");
+        var $earth = $(".earth");
+        var $devoxx = $(".devoxx");
+        var previousHeight = $earth.height();
+        var devoxxPreviousCss = $devoxx.css(["opacity","width"]);
+
         jasmine.Clock.tick(81);
 
-        expect($(".earth")).toHaveCss({bottom:"-2px"});
+        expect($earth).toHaveCss({bottom:"-6px"});
+        expect($earth.height()).toBeLessThan(previousHeight);
+        expect($devoxx.css("opacity")).toBeGreaterThan(devoxxPreviousCss.opacity);
+        expect($devoxx.css("width")).toBeLessThan(devoxxPreviousCss.width);
+        expect($drone.css("left")).toBe(previousPos);
+
+
+        nextPosition = functionNextPosition;
+    });
+
+    it ("and a little time after that, the earth is removed, no more need to handle this, too little to display", function () {
+        setFixtures(sandbox());
+        var timerCallBack = jasmine.createSpy("timerCallBack");
+        jasmine.Clock.useMock();
+
+        functionNextPosition = nextPosition;
+
+        nextPosition = function leakFunctionToOverrideTheRealOne() {
+            timerCallBack();
+            functionNextPosition();
+        };
+
+        drone.power = 1;
+        start($("#sandbox"));
+
+        jasmine.Clock.tick(8100);
+
+        expect($("#sandbox").find(".earth").length).toBe(0);
+
+        jasmine.Clock.tick(8100);
+
+        expect($("#sandbox").find(".devoxx")).toHaveCss({width:"1510px",bottom:"0px"});
 
         nextPosition = functionNextPosition;
     });
